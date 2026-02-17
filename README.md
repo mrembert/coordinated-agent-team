@@ -1,122 +1,125 @@
 # Coordinated Agent Team
 
-Framework do **autonomicznego dostarczania oprogramowania** przez skoordynowany zespół agentów AI, sterowany maszyną stanów.
+A framework for **autonomous software delivery** by a coordinated team of AI agents, driven by a state machine.
 
-## Idea
+## Concept
 
-Zamiast jednego monolitycznego agenta AI, projekty realizuje **zespół 11 wyspecjalizowanych agentów**, z których każdy pełni odrębną rolę — od zbierania wymagań, przez architekturę, planowanie, implementację, code review, testy, audyt bezpieczeństwa, aż po dokumentację i release. Całością zarządza **Orchestrator**, który nigdy nie pisze kodu samodzielnie — jedynie deleguje zadania i pilnuje bramek jakości.
+Instead of a single monolithic AI agent, projects are delivered by a **team of 12 specialized agents**, each fulfilling a distinct role — from requirements gathering, through architecture, planning, implementation, code review, testing, security audit, all the way to documentation and release. The entire workflow is managed by an **Orchestrator** that never writes code itself — it only delegates tasks and enforces quality gates.
 
-## Architektura
+## Architecture
 
-### Maszyna stanów (workflow)
+### State machine (workflow)
 
 ```
 INTAKE → DESIGN → PLAN → IMPLEMENT_LOOP → INTEGRATE → RELEASE → DONE
 ```
 
-Tryb uproszczony dla trywialnych zmian:
+Simplified mode for trivial changes:
 ```
 INTAKE_LEAN → IMPLEMENT_LOOP → INTEGRATE → DONE
 ```
 
-Dodatkowe stany naprawcze: `FIX_REVIEW`, `FIX_TESTS`, `FIX_SECURITY`, `FIX_BUILD`, `ASK_USER`, `BLOCKED`.
+Additional repair states: `FIX_REVIEW`, `FIX_TESTS`, `FIX_SECURITY`, `FIX_BUILD`, `ASK_USER`, `BLOCKED`.
 
-### Agenci
+### Agents
 
-| #  | Agent          | Model            | Rola                                                        |
-|----|----------------|------------------|-------------------------------------------------------------|
-| 00 | **Orchestrator** | Claude Opus 4.6  | Steruje workflow, deleguje zadania, nie pisze kodu         |
-| 01 | **SpecAgent**    | Claude Opus 4.6  | Tworzy specyfikacje (`spec.md`, `acceptance.json`)         |
-| 02 | **Architect**    | GPT-5.3-Codex    | Projektuje architekturę, tworzy ADR                        |
-| 03 | **Planner**      | GPT-5.3-Codex    | Tworzy backlog zadań (`tasks.yaml`)                        |
-| 04 | **Coder**        | Claude Opus 4.6  | Implementuje zadania                                       |
-| 05 | **Reviewer**     | GPT-5.3-Codex    | Code review z checklistą + devil's advocate                |
-| 06 | **QA**           | Gemini 3 Pro     | Testy, walidacja kryteriów akceptacji                      |
-| 07 | **Security**     | GPT-5.3-Codex    | Audyt bezpieczeństwa (XSS, CSRF, SSRF, auth, secrets)     |
-| 08 | **Integrator**   | GPT-5.3-Codex    | Integracja, green build, release                           |
-| 09 | **Docs**         | Claude Haiku 4.5 | Dokumentacja, README, raport końcowy                       |
-| 10 | **Designer**     | Gemini 3 Pro     | UX/UI design specs (wywoływany warunkowo)                  |
+| #  | Agent          | Model            | Role                                                         |
+|----|----------------|------------------|--------------------------------------------------------------|
+| 00 | **Orchestrator** | Claude Opus 4.6  | Controls workflow, delegates tasks, never writes code       |
+| 01 | **SpecAgent**    | Claude Opus 4.6  | Creates specifications (`spec.md`, `acceptance.json`)       |
+| 02 | **Architect**    | GPT-5.3-Codex    | Designs architecture, creates ADRs                          |
+| 03 | **Planner**      | GPT-5.3-Codex    | Creates task backlog (`tasks.yaml`)                         |
+| 04 | **Coder**        | Claude Opus 4.6  | Implements tasks                                            |
+| 05 | **Reviewer**     | GPT-5.3-Codex    | Code review with checklist + devil's advocate               |
+| 06 | **QA**           | Gemini 3 Pro     | Tests, acceptance criteria validation                       |
+| 07 | **Security**     | GPT-5.3-Codex    | Security audit (XSS, CSRF, SSRF, auth, secrets)            |
+| 08 | **Integrator**   | GPT-5.3-Codex    | Integration, green build, release                           |
+| 09 | **Docs**         | Claude Haiku 4.5 | Documentation, README, final report                         |
+| 10 | **Designer**     | Gemini 3 Pro     | UX/UI design specs (invoked conditionally)                  |
+| 11 | **Researcher**   | Claude Opus 4.6  | Technology research, pattern analysis, codebase investigation (conditionally) |
 
-### Komunikacja przez artefakty
+### Communication via artifacts
 
-Agenci nie komunikują się przez czat — **źródłem prawdy są pliki w repozytorium**:
+Agents do not communicate through chat — **the source of truth is the files in the repository**:
 
-| Artefakt             | Format   | Opis                                      |
+| Artifact             | Format   | Description                                |
 |----------------------|----------|--------------------------------------------|
-| `spec.md`            | Markdown | Specyfikacja wymagań (PRD)                 |
-| `acceptance.json`    | JSON     | Kryteria akceptacji                        |
-| `architecture.md`    | Markdown | Architektura systemu                       |
-| `tasks.yaml`         | YAML     | Backlog zadań z zależnościami              |
-| `status.json`        | JSON     | Stan sesji, retry, decyzje użytkownika     |
-| `report.md`          | Markdown | Raport końcowy                             |
+| `spec.md`            | Markdown | Requirements specification (PRD)           |
+| `acceptance.json`    | JSON     | Acceptance criteria                        |
+| `architecture.md`    | Markdown | System architecture                        |
+| `tasks.yaml`         | YAML     | Task backlog with dependencies and status  |
+| `status.json`        | JSON     | Session state, retries, user decisions     |
+| `report.md`          | Markdown | Final report                               |
 | `adr/ADR-XXX.md`     | Markdown | Architecture Decision Records              |
-| `design-specs/`      | Markdown | Specyfikacje UX/UI od Designera            |
+| `design-specs/`      | Markdown | UX/UI specifications from Designer         |
+| `research/`          | Markdown | Research reports from Researcher           |
 
-Artefakty każdej sesji trafiają do `.agents-work/YYYY-MM-DD_<slug>/`.
+Each session's artifacts are stored in `.agents-work/YYYY-MM-DD_<slug>/`.
 
-### Bramki jakości (gates)
+### Quality gates
 
-Workflow nie przechodzi dalej, jeśli:
-- Brakuje wymaganych artefaktów (`spec.md`, `acceptance.json`, `tasks.yaml`)
-- **Reviewer** blokuje (BLOCKED)
-- **QA** blokuje (BLOCKED)
-- **Security** blokuje (high severity)
-- CI/build jest czerwony
+The workflow does not progress if:
+- Required artifacts are missing (`spec.md`, `acceptance.json`, `tasks.yaml`)
+- **Reviewer** blocks (BLOCKED)
+- **QA** blocks (BLOCKED)
+- **Security** blocks (high severity)
+- CI/build is red
 
-Pętle naprawcze mają budżet **maks 3 prób** — po wyczerpaniu następuje eskalacja do użytkownika (`ASK_USER`).
+Repair loops have a budget of **max 3 attempts** — after exhaustion, the issue is escalated to the user (`ASK_USER`).
 
-## Pliki konfiguracyjne
+## Configuration files
 
 ```
 .github/
 └── agents/
-    ├── 00-orchestrator.md    # Definicja roli Orchestratora
-    ├── 01-spec-agent.md      # Definicja roli SpecAgenta
-    ├── 02-architect.md       # Definicja roli Architekta
-    ├── 03-planner.md         # Definicja roli Plannera
-    ├── 04-coder.md           # Definicja roli Codera
-    ├── 05-reviewer.md        # Definicja roli Reviewera
-    ├── 06-qa.md              # Definicja roli QA
-    ├── 07-security.md        # Definicja roli Security
-    ├── 08-integrator.md      # Definicja roli Integratora
-    ├── 09-docs.md            # Definicja roli Docs
-    ├── 10-designer.md        # Definicja roli Designera
-    ├── CONTRACT.md           # Globalny kontrakt I/O agentów
-    └── WORKFLOW.md           # Maszyna stanów, reguły dispatch
+    ├── 00-orchestrator.md    # Orchestrator role definition
+    ├── 01-spec-agent.md      # SpecAgent role definition
+    ├── 02-architect.md       # Architect role definition
+    ├── 03-planner.md         # Planner role definition
+    ├── 04-coder.md           # Coder role definition
+    ├── 05-reviewer.md        # Reviewer role definition
+    ├── 06-qa.md              # QA role definition
+    ├── 07-security.md        # Security role definition
+    ├── 08-integrator.md      # Integrator role definition
+    ├── 09-docs.md            # Docs role definition
+    ├── 10-designer.md        # Designer role definition
+    ├── 11-researcher.md      # Researcher role definition
+    ├── CONTRACT.md           # Global agent I/O contract
+    └── WORKFLOW.md           # State machine, dispatch rules
 ```
 
-## Projekty demo
+## Demo projects
 
 ### 🍅 FocusFlow (demo-pomidoro)
 
-Aplikacja Pomodoro Timer z dziennikiem rozproszeń. Vanilla JS, zero zależności, statyczny hosting.
+A Pomodoro Timer app with a distraction journal. Vanilla JS, zero dependencies, static hosting.
 
-**Funkcje:** timer 25 min (Date.now-based), stany idle/running/paused/completed, dziennik rozproszeń z walidacją, liczniki dzienne, localStorage, import/export JSON, skróty klawiaturowe.
+**Features:** 25-min timer (Date.now-based), idle/running/paused/completed states, distraction journal with validation, daily counters, localStorage, JSON import/export, keyboard shortcuts.
 
-**Status:** ✅ DONE — w pełni zrealizowany przez pipeline agentów.
+**Status:** ✅ DONE — fully delivered by the agent pipeline.
 
 ### 🚦 Traffic Simulator (demo-traffic-simulator)
 
-Minimalna symulacja ruchu drogowego na skrzyżowaniu. Vanilla JS + Canvas API, zero zależności.
+A minimal intersection traffic simulation. Vanilla JS + Canvas API, zero dependencies.
 
-**Funkcje:** rendering mapy i pojazdów na canvas, logika hamowania, sygnalizacja świetlna, sterowanie parametrami (natężenie, prędkość, gęstość), statystyki live (aktywne pojazdy, średnia prędkość, przepustowość).
+**Features:** map and vehicle rendering on canvas, braking logic, traffic lights, parameter controls (intensity, speed, density), live statistics (active vehicles, average speed, throughput).
 
 ## Tech stack
 
-- **Środowisko:** VS Code + GitHub Copilot Chat (custom agents / chat participants)
+- **Environment:** VS Code + GitHub Copilot Chat (custom agents / chat participants)
 - **Multi-model:** Claude Opus 4.6, GPT-5.3-Codex, Gemini 3 Pro, Claude Haiku 4.5
-- **Projekty demo:** Vanilla JS, zero frameworków, zero zależności, statyczny hosting
-- **Quality gates:** `npm test`, `npm run lint`, `npm run build` + manualne checklists
-- **Artefakty:** Markdown, JSON, YAML — wszystko wersjonowane w repo
+- **Demo projects:** Vanilla JS, zero frameworks, zero dependencies, static hosting
+- **Quality gates:** `npm test`, `npm run lint`, `npm run build` + manual checklists
+- **Artifacts:** Markdown, JSON, YAML — all version-controlled in the repo
 
-## Jak to działa
+## How it works
 
-1. Użytkownik opisuje cel w czacie z Orchestratorem
-2. Orchestrator tworzy sesję w `.agents-work/` i deleguje do **SpecAgenta** (specyfikacja)
-3. **Architect** projektuje architekturę, **Planner** dzieli na zadania
-4. **Coder** implementuje zadanie po zadaniu
-5. Po każdym zadaniu: **Reviewer** (code review) → **QA** (testy) → opcjonalnie **Security**
-6. Pętle naprawcze (`FIX_*`) jeśli bramka blokuje, maks 3 próby
-7. **Integrator** sprawdza green build, **Docs** generuje dokumentację
-8. Orchestrator zamyka sesję ze statusem `DONE` i generuje `report.md`
+1. The user describes a goal in chat with the Orchestrator
+2. Orchestrator creates a session in `.agents-work/` and delegates to **SpecAgent** (specification)
+3. **Researcher** investigates technologies/patterns if needed, then **Architect** designs the architecture, **Planner** breaks it into tasks
+4. **Coder** implements tasks one by one
+5. After each task: **Reviewer** (code review) → **QA** (tests) → optionally **Security**
+6. Repair loops (`FIX_*`) if a gate blocks, max 3 attempts
+7. **Integrator** ensures green build, **Docs** generates documentation
+8. Orchestrator closes the session with `DONE` status and generates `report.md`
 

@@ -23,9 +23,9 @@ Orchestrator creates minimal artifacts directly (no SpecAgent):
 Gate: artifacts exist. If Coder discovers complexity, exit lean mode and restart from full INTAKE.
 
 ### DESIGN
-Agents: Architect, then Designer (if task involves UI/UX)
-Produces: `.agents-work/<session>/architecture.md`, `.agents-work/<session>/adr/ADR-001.md` (if needed), `.agents-work/<session>/design-specs/` (if Designer involved)
-Gate: architecture consistent with spec, risks recorded. If UI involved, design spec exists.
+Agents: Researcher (if research needed — see Orchestrator's Researcher trigger policy), then Architect, then Designer (if task involves UI/UX)
+Produces: `.agents-work/<session>/research/` (if Researcher involved), `.agents-work/<session>/architecture.md`, `.agents-work/<session>/adr/ADR-001.md` (if needed), `.agents-work/<session>/design-specs/` (if Designer involved)
+Gate: architecture consistent with spec, risks recorded. If research was requested, research report exists. If UI involved, design spec exists.
 
 ### PLAN
 Agent: Planner
@@ -42,7 +42,7 @@ Gate per task:
 - Reviewer OK
 - QA OK (if required)
 - Security OK (if required)
-- Task marked completed in `.agents-work/<session>/status.json`
+- Task marked completed in `.agents-work/<session>/status.json` and `status: completed` in `.agents-work/<session>/tasks.yaml`
 
 ### ASK_USER
 Trigger: Orchestrator enters this state when human judgment is needed.
@@ -86,6 +86,7 @@ Retry counts are tracked in `.agents-work/<session>/status.json` under `retry_co
 Orchestrator MUST use all agents at least once in a full run:
 - SpecAgent, Architect, Planner, Coder, Reviewer, QA, Security, Integrator, Docs
 Optional (used when applicable):
+- Researcher (when task requires technology evaluation, codebase analysis, or best practices research)
 - Designer (when task involves UI/UX)
 - ASK_USER (when human judgment is needed)
 Exception: Security can be "OK no findings," but must be run.

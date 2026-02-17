@@ -60,6 +60,7 @@ project:
     - "README updated"
 tasks:
   - id: T-001
+    status: not-started
     type: feat|fix|refactor|chore|test|docs
     title: "..."
     depends_on: ["T-000"]
@@ -75,6 +76,14 @@ tasks:
       - "Tests added/updated"
       - "No lint errors"
       - "Meets AC-XXX references"
+
+## Task status lifecycle
+- `not-started` — initial state, set by Planner at creation
+- `in-progress` — set by Coder when implementation begins
+- `completed` — set by Coder after successful implementation (or by the agent that finishes the task)
+- `blocked` — set by any agent that encounters a blocker for this task
+
+Agents MUST update the task's `status` field in `tasks.yaml` when the state changes. This keeps `tasks.yaml` as a live dashboard of project progress.
 
 ## Planning rules
 - Prefer many small tasks over one big task

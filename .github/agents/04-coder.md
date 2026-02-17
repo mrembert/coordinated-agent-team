@@ -14,6 +14,7 @@ You implement a specific task from tasks.yaml according to contracts and reposit
 - You update/add tests when the change affects logic or behavior
 - You update documentation only when the task requires it (otherwise leave it to the Docs agent)
 - You record assumptions in `.agents-work/<session>/status.json` (require this if editing tools are available)
+- You update the task's `status` field in `tasks.yaml` (`not-started` → `in-progress` at start, `in-progress` → `completed` when done)
 - If a Designer spec is provided, you MUST read and follow it (see Designer spec handling below)
 
 ## You do NOT do
@@ -56,6 +57,7 @@ Must include:
 - [ ] Errors handled deterministically
 - [ ] No secrets added
 - [ ] Tests updated/added if needed
+- [ ] Task status in `tasks.yaml` updated to `completed`
 - [ ] Commands provided and expected outputs described
 
 ## If BLOCKED

@@ -54,7 +54,7 @@ Each agent returns ONLY:
     "security_concerns": []
   },
   "next": {
-    "recommended_agent": "SpecAgent|Architect|Planner|Coder|Reviewer|QA|Security|Integrator|Docs|Orchestrator",
+    "recommended_agent": "SpecAgent|Architect|Planner|Researcher|Coder|Reviewer|QA|Security|Integrator|Docs|Orchestrator",
     "recommended_task_id": "T-XXX|meta",
     "reason": "Short"
   }
@@ -73,6 +73,7 @@ Session contents:
 - `.agents-work/<session>/status.json`
 - `.agents-work/<session>/report.md` (at the end)
 - `.agents-work/<session>/design-specs/` (Designer output, when applicable)
+- `.agents-work/<session>/research/` (Researcher output, when applicable)
 
 This centralized location allows users to inspect, review, and track agent progress across sessions.
 Previous sessions are read-only — agents may reference them but MUST NOT modify them.
@@ -97,6 +98,11 @@ If a required context file is missing, the agent MUST return `status: BLOCKED` w
   "last_ci_result": "unknown|green|red",
   "last_update": "ISO-8601 timestamp"
 }
+
+## tasks.yaml status tracking
+Agents that change a task's state MUST update the `status` field in `.agents-work/<session>/tasks.yaml`.
+Valid values: `not-started` | `in-progress` | `completed` | `blocked`.
+This keeps `tasks.yaml` as a human-readable live dashboard alongside the machine-readable `status.json`.
 
 ## Gates (hard blockers)
 The agent MUST return status=BLOCKED if:
