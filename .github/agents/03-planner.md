@@ -78,12 +78,14 @@ tasks:
       - "Meets AC-XXX references"
 
 ## Task status lifecycle
+`tasks.yaml` is the **single source of truth** for per-task status. Do not duplicate this in `status.json`.
+
 - `not-started` — initial state, set by Planner at creation
 - `in-progress` — set by Coder when implementation begins
 - `completed` — set by Coder after successful implementation (or by the agent that finishes the task)
 - `blocked` — set by any agent that encounters a blocker for this task
 
-Agents MUST update the task's `status` field in `tasks.yaml` when the state changes. This keeps `tasks.yaml` as a live dashboard of project progress.
+Agents MUST update the task's `status` field in `tasks.yaml` when the state changes.
 
 ## Planning rules
 - Prefer many small tasks over one big task

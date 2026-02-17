@@ -89,8 +89,6 @@ If a required context file is missing, the agent MUST return `status: BLOCKED` w
 {
   "current_state": "INTAKE|DESIGN|PLAN|IMPLEMENT_LOOP|INTEGRATE|RELEASE|DONE|ASK_USER|BLOCKED",
   "session": "YYYY-MM-DD_short-slug",
-  "completed_tasks": ["T-001"],
-  "blocked_tasks": [{"id":"T-002","reason":"..."}],
   "assumptions": ["..."],
   "user_decisions": [{"question":"...","answer":"...","timestamp":"ISO-8601","state_context":"which state triggered ASK_USER"}],
   "retry_counts": {"T-001": {"FIX_REVIEW": 0, "FIX_TESTS": 0, "FIX_SECURITY": 0, "FIX_BUILD": 0}},
@@ -99,10 +97,14 @@ If a required context file is missing, the agent MUST return `status: BLOCKED` w
   "last_update": "ISO-8601 timestamp"
 }
 
-## tasks.yaml status tracking
+Note: per-task status (not-started, in-progress, completed, blocked) lives ONLY in `tasks.yaml`. Do NOT duplicate it here.
+
+## tasks.yaml — single source of truth for task status
 Agents that change a task's state MUST update the `status` field in `.agents-work/<session>/tasks.yaml`.
 Valid values: `not-started` | `in-progress` | `completed` | `blocked`.
-This keeps `tasks.yaml` as a human-readable live dashboard alongside the machine-readable `status.json`.
+`tasks.yaml` is the single source of truth for per-task progress. `status.json` tracks session-level state only (workflow position, retries, decisions).
+
+**User-facing dashboard**: `tasks.yaml` and `status.json` are actively monitored by the user to track progress in real time. Agents MUST keep both files accurate and up-to-date at every state transition — they serve as the project's live dashboard, not just internal coordination artifacts.
 
 ## Gates (hard blockers)
 The agent MUST return status=BLOCKED if:

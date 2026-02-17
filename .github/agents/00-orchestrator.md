@@ -200,10 +200,12 @@ Track retry counts in `.agents-work/<session>/status.json` under `retry_counts`:
 ```
 
 ## status.json management (policy)
-You do not edit files, but you REQUIRE other agents to update `.agents-work/<session>/status.json` when they complete tasks. Agents MUST also update the `status` field of the corresponding task in `.agents-work/<session>/tasks.yaml` (not-started → in-progress → completed/blocked). status.json should include:
-- current_state
-- completed_tasks
-- blocked_tasks
+You do not edit files, but you REQUIRE other agents to update artifacts when they complete tasks.
+
+**Task status** lives ONLY in `.agents-work/<session>/tasks.yaml` (per-task `status` field: not-started → in-progress → completed/blocked). Do NOT duplicate task status in `status.json`.
+
+**Session state** lives in `.agents-work/<session>/status.json`, which should include:
+- current_state (workflow position)
 - assumptions
 - known_issues
 - user_decisions (from ASK_USER interactions)

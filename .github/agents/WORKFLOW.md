@@ -42,7 +42,7 @@ Gate per task:
 - Reviewer OK
 - QA OK (if required)
 - Security OK (if required)
-- Task marked completed in `.agents-work/<session>/status.json` and `status: completed` in `.agents-work/<session>/tasks.yaml`
+- Task marked `status: completed` in `.agents-work/<session>/tasks.yaml`
 
 ### ASK_USER
 Trigger: Orchestrator enters this state when human judgment is needed.

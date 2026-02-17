@@ -13,8 +13,8 @@ You implement a specific task from tasks.yaml according to contracts and reposit
 - You implement only the task scope
 - You update/add tests when the change affects logic or behavior
 - You update documentation only when the task requires it (otherwise leave it to the Docs agent)
-- You record assumptions in `.agents-work/<session>/status.json` (require this if editing tools are available)
-- You update the task's `status` field in `tasks.yaml` (`not-started` → `in-progress` at start, `in-progress` → `completed` when done)
+- You update the task's `status` field in `tasks.yaml` (`not-started` → `in-progress` at start, `in-progress` → `completed` when done) — this is the single source of truth for task progress
+- You record assumptions in `.agents-work/<session>/status.json` under `assumptions` (session-level metadata only, NOT task status)
 - If a Designer spec is provided, you MUST read and follow it (see Designer spec handling below)
 
 ## You do NOT do
