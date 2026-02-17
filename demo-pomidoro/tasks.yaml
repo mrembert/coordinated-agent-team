@@ -1,0 +1,207 @@
+project: FocusFlow
+source_task: T-003
+state_target: IMPLEMENT_LOOP
+tasks:
+  - id: T-101
+    title: Setup projektu i baseline quality scripts
+    owner: Coder
+    deps: []
+    acceptance_checks:
+      - cmd: npm test -- --help
+      - cmd: npm run lint -- --help
+      - cmd: npm run build -- --help
+    done_when:
+      - Istnieje szkielet aplikacji statycznej zgodny z architekturą.
+      - Skrypty npm test/lint/build są zdefiniowane i uruchamialne.
+      - Struktura plików odpowiada modułom app/timer/storage/ui.
+    risk_flags: [perf]
+
+  - id: T-102
+    title: Review zmian setupowych
+    owner: Reviewer
+    deps: [T-101]
+    acceptance_checks:
+      - manual: przegląd zgodności ze spec.md i architecture.md
+    done_when:
+      - Reviewer potwierdza zgodność setupu z założeniami projektu.
+      - Brak blockerów architektonicznych do dalszej implementacji.
+    risk_flags: [none]
+
+  - id: T-103
+    title: QA baseline projektu
+    owner: QA
+    deps: [T-102]
+    acceptance_checks:
+      - cmd: npm test
+      - cmd: npm run lint
+      - cmd: npm run build
+    done_when:
+      - Wszystkie baseline quality gates przechodzą.
+      - Brak blockerów uniemożliwiających implementację funkcji A-D.
+    risk_flags: [perf]
+
+  - id: T-110
+    title: Implementacja timera Pomodoro i sterowania sesją (A-B)
+    owner: Coder
+    deps: [T-103]
+    acceptance_checks:
+      - manual: Start uruchamia 25:00 i odliczanie mm:ss
+      - manual: Pause zatrzymuje czas bez utraty postępu
+      - manual: Resume kontynuuje od wartości z pauzy
+      - manual: Reset przywraca 25:00 i stan idle
+      - manual: Po zakończeniu sesji widoczny status completed
+    done_when:
+      - Timer działa na Date.now i różnicy czasu, nie na samych tickach.
+      - Stany idle/running/paused/completed są poprawnie obsłużone.
+      - UI timera aktualizuje się płynnie co 1s bez dryfu funkcjonalnego.
+    risk_flags: [perf]
+
+  - id: T-111
+    title: Review implementacji A-B
+    owner: Reviewer
+    deps: [T-110]
+    acceptance_checks:
+      - manual: code review logiki Date.now i przejść stanów
+    done_when:
+      - Reviewer zatwierdza poprawność implementacji A-B.
+      - Nie ma uwag blokujących merge.
+    risk_flags: [perf]
+
+  - id: T-112
+    title: QA timera i sterowania (A-B)
+    owner: QA
+    deps: [T-111]
+    acceptance_checks:
+      - cmd: npm test
+      - manual: test dryfu po przełączeniu karty na >= 30s
+      - manual: scenariusz Start -> Pause -> Resume -> Reset
+    done_when:
+      - AC-A-001, AC-A-002 i AC-B-001 są spełnione.
+      - Brak regresji w podstawowym przepływie timera.
+    risk_flags: [perf]
+
+  - id: T-120
+    title: Implementacja Distraction Journal z bezpiecznym renderem (C)
+    owner: Coder
+    deps: [T-112]
+    acceptance_checks:
+      - manual: dodanie poprawnego wpisu zapisuje tekst i timestamp
+      - manual: wpisy puste i whitespace są odrzucane
+      - cmd: npm run test -- --grep security|xss
+    done_when:
+      - Wpisy journal są walidowane przez trim i nie przyjmują pustych wartości.
+      - Render danych usera używa wyłącznie bezpiecznych API DOM.
+      - Lista wpisów pokazuje dane w kolejności dodawania.
+    risk_flags: [security]
+
+  - id: T-121
+    title: Review implementacji Journal (C)
+    owner: Reviewer
+    deps: [T-120]
+    acceptance_checks:
+      - manual: przegląd walidacji inputu i sposobu renderowania danych usera
+    done_when:
+      - Reviewer potwierdza zgodność z AC-C-001 i wymaganiami bezpieczeństwa.
+      - Brak uwag blokujących w obszarze walidacji i renderowania.
+    risk_flags: [security]
+
+  - id: T-122
+    title: QA Journal (C)
+    owner: QA
+    deps: [T-121]
+    acceptance_checks:
+      - cmd: npm test
+      - manual: scenariusze pozytywne/negatywne walidacji journal
+    done_when:
+      - AC-C-001 jest spełnione.
+      - Testy walidacji journal przechodzą.
+    risk_flags: [security]
+
+  - id: T-123
+    title: Security check Journal (C)
+    owner: Security
+    deps: [T-122]
+    acceptance_checks:
+      - manual: weryfikacja braku innerHTML dla danych użytkownika
+      - cmd: npm run test -- --grep security|xss
+    done_when:
+      - AC-C-002 jest spełnione.
+      - Brak znalezisk high/critical w zakresie XSS.
+    risk_flags: [security]
+
+  - id: T-130
+    title: Implementacja widoku dziennego, persistence i import/export danych (D)
+    owner: Coder
+    deps: [T-123]
+    acceptance_checks:
+      - manual: licznik sesji dnia rośnie po completed
+      - manual: licznik rozproszeń dnia rośnie po dodaniu wpisu
+      - manual: odświeżenie strony odtwarza stan z localStorage
+      - manual: import poprawnego JSON odtwarza stan
+      - manual: export generuje JSON stanu
+    done_when:
+      - Statystyki dzienne sesji i rozproszeń są poprawnie wyliczane po local date.
+      - Stan aplikacji jest zapisywany i odtwarzany z localStorage.
+      - Import/export JSON działa z walidacją struktury i bezpiecznym fallback.
+    risk_flags: [security, perf]
+
+  - id: T-131
+    title: Review implementacji D i storage
+    owner: Reviewer
+    deps: [T-130]
+    acceptance_checks:
+      - manual: przegląd spójności single source of truth i integralności stanu
+    done_when:
+      - Reviewer zatwierdza zgodność z AC-D-001 i AC-D-002.
+      - Brak blockerów w logice storage i odtwarzaniu stanu.
+    risk_flags: [security, perf]
+
+  - id: T-132
+    title: QA widoku dziennego i persistence (D)
+    owner: QA
+    deps: [T-131]
+    acceptance_checks:
+      - cmd: npm test
+      - manual: weryfikacja odtworzenia stanu po refresh
+      - manual: weryfikacja poprawności liczników dnia
+    done_when:
+      - AC-D-001 i AC-D-002 są spełnione.
+      - Testy integracyjne dla persistence przechodzą.
+    risk_flags: [perf]
+
+  - id: T-133
+    title: Security check import/export i storage
+    owner: Security
+    deps: [T-132]
+    acceptance_checks:
+      - manual: negatywne testy importu JSON (błędny schemat)
+      - manual: potwierdzenie bezpiecznego fallback dla uszkodzonych danych
+    done_when:
+      - Brak krytycznych podatności wynikających z importu danych.
+      - Walidacja importu blokuje niepoprawną strukturę stanu.
+    risk_flags: [security]
+
+  - id: T-140
+    title: Domknięcie quality gates test/lint/build
+    owner: QA
+    deps: [T-133]
+    acceptance_checks:
+      - cmd: npm test
+      - cmd: npm run lint
+      - cmd: npm run build
+    done_when:
+      - AC-QA-TEST-001, AC-QA-LINT-001 i AC-QA-BUILD-001 są spełnione.
+      - Projekt jest gotowy do etapu INTEGRATE bez blockerów jakościowych.
+    risk_flags: [perf]
+
+  - id: T-150
+    title: Dokumentacja implementacji i wpis do report.md
+    owner: Docs
+    deps: [T-140]
+    acceptance_checks:
+      - manual: aktualizacja instrukcji uruchamiania i testowania
+      - manual: podsumowanie zmian i known issues do report.md
+    done_when:
+      - Dokumentacja opisuje jak uruchomić, testować i zweryfikować A-D.
+      - Materiał do RELEASE jest kompletny i zgodny z wykonanym zakresem.
+    risk_flags: [none]

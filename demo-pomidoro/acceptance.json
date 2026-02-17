@@ -1,0 +1,84 @@
+{
+  "project": "FocusFlow",
+  "task_id": "T-001",
+  "acceptance_criteria": [
+    {
+      "id": "AC-A-001",
+      "description": "Timer Pomodoro startuje od 25:00 i odlicza w dół w formacie mm:ss.",
+      "verification": "manual",
+      "commands": [],
+      "expected_result": "Po kliknięciu Start widoczny czas zmniejsza się co sekundę i pozostaje poprawnie sformatowany."
+    },
+    {
+      "id": "AC-A-002",
+      "description": "Silnik timera opiera się o Date.now() i różnice czasu, dzięki czemu po chwilowym zablokowaniu karty czas nie dryfuje istotnie.",
+      "verification": "manual",
+      "commands": [],
+      "expected_result": "Po powrocie do karty pozostały czas odpowiada rzeczywistemu upływowi czasu, bez akumulacji błędu z samych ticków setInterval."
+    },
+    {
+      "id": "AC-B-001",
+      "description": "Sterowanie Start/Pauza/Wznów/Reset działa zgodnie z definicją stanów sesji.",
+      "verification": "manual",
+      "commands": [],
+      "expected_result": "Pauza zatrzymuje odliczanie, Wznów kontynuuje, Reset przywraca 25:00 i stan bez aktywnej sesji."
+    },
+    {
+      "id": "AC-C-001",
+      "description": "Distraction Journal dodaje niepuste wpisy z timestampem i wyświetla je jako listę.",
+      "verification": "manual",
+      "commands": [],
+      "expected_result": "Nowy wpis pojawia się na liście z tekstem i czasem utworzenia; puste wpisy są odrzucane."
+    },
+    {
+      "id": "AC-C-002",
+      "description": "Render danych od użytkownika jest bezpieczny (brak innerHTML dla inputu usera).",
+      "verification": "automatyczna",
+      "commands": [
+        "npm run test -- --grep security|xss"
+      ],
+      "expected_result": "Testy bezpieczeństwa przechodzą i potwierdzają użycie textContent/bezpiecznego API DOM."
+    },
+    {
+      "id": "AC-D-001",
+      "description": "Aplikacja pokazuje licznik ukończonych sesji i licznik rozproszeń dla bieżącego dnia.",
+      "verification": "manual",
+      "commands": [],
+      "expected_result": "Po ukończeniu sesji rośnie licznik sesji dnia, po dodaniu wpisu rośnie licznik rozproszeń dnia."
+    },
+    {
+      "id": "AC-D-002",
+      "description": "Stan sesji i dziennika jest utrwalony lokalnie i odtwarzany po odświeżeniu strony.",
+      "verification": "manual",
+      "commands": [],
+      "expected_result": "Po odświeżeniu widoczne są wcześniej zapisane dane dnia z localStorage."
+    },
+    {
+      "id": "AC-QA-TEST-001",
+      "description": "Pakiet testów przechodzi.",
+      "verification": "automatyczna",
+      "commands": [
+        "npm test"
+      ],
+      "expected_result": "Kod wyjścia 0, wszystkie testy zakończone sukcesem."
+    },
+    {
+      "id": "AC-QA-LINT-001",
+      "description": "Lint przechodzi bez błędów krytycznych.",
+      "verification": "automatyczna",
+      "commands": [
+        "npm run lint"
+      ],
+      "expected_result": "Kod wyjścia 0, brak błędów lint blokujących merge."
+    },
+    {
+      "id": "AC-QA-BUILD-001",
+      "description": "Build projektu przechodzi poprawnie.",
+      "verification": "automatyczna",
+      "commands": [
+        "npm run build"
+      ],
+      "expected_result": "Kod wyjścia 0, artefakt build generuje się bez błędów."
+    }
+  ]
+}

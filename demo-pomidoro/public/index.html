@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FocusFlow Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <h1>FocusFlow</h1>
+
+      <section class="card" aria-labelledby="timer-heading">
+        <h2 id="timer-heading">Pomodoro</h2>
+        <p id="timer-display" class="timer-display" aria-live="polite">25:00</p>
+        <p id="timer-status" class="status">idle</p>
+        <div class="controls">
+          <button id="start-btn" type="button">Start</button>
+          <button id="pause-btn" type="button">Pauza</button>
+          <button id="resume-btn" type="button">Wznów</button>
+          <button id="reset-btn" type="button">Reset</button>
+          <button id="new-session-btn" type="button">Nowa sesja</button>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="journal-heading">
+        <h2 id="journal-heading">Distraction Journal</h2>
+        <div class="journal-input-row">
+          <input
+            id="journal-input"
+            type="text"
+            maxlength="200"
+            placeholder="Dodaj rozproszenie..."
+            aria-label="Treść rozproszenia"
+          />
+          <button id="add-entry-btn" type="button">Dodaj</button>
+        </div>
+        <p id="journal-error" class="error" aria-live="polite"></p>
+        <ul id="journal-list" class="journal-list"></ul>
+      </section>
+
+      <section class="card" aria-labelledby="stats-heading">
+        <h2 id="stats-heading">Dzisiaj</h2>
+        <p>Ukończone sesje: <span id="today-sessions">0</span></p>
+        <p>Rozproszenia: <span id="today-distractions">0</span></p>
+      </section>
+
+      <section class="card" aria-labelledby="data-heading">
+        <h2 id="data-heading">Dane</h2>
+        <div class="controls">
+          <button id="export-btn" type="button">Export JSON</button>
+          <button id="import-btn" type="button">Import JSON</button>
+          <button id="clear-data-btn" type="button">Wyczyść dane</button>
+        </div>
+        <textarea
+          id="state-json"
+          rows="8"
+          placeholder="Tutaj pojawi się export lub wklej JSON do importu"
+          aria-label="Pole JSON stanu"
+        ></textarea>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+  </html>

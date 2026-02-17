@@ -1,0 +1,37 @@
+{
+  "current_state": "DONE",
+  "completed_tasks": [
+    "T-001",
+    "T-002",
+    "T-003",
+    "T-101",
+    "T-102",
+    "T-103",
+    "T-110",
+    "T-111",
+    "T-112",
+    "T-120",
+    "T-121",
+    "T-122",
+    "T-123",
+    "T-130",
+    "T-131",
+    "T-132",
+    "T-133",
+    "T-140",
+    "T-150",
+    "meta-release-finalize"
+  ],
+  "blocked_tasks": [],
+  "assumptions": [
+    "Projekt będzie zawierał skrypty npm: test, lint, build zgodnie z acceptance.",
+    "Demo FocusFlow pozostaje aplikacją statyczną bez backendu.",
+    "Dzienny zakres danych liczony jest po lokalnej dacie użytkownika.",
+    "Build jest realizowany jako walidacja i kopiowanie plików statycznych do dist/."
+  ],
+  "known_issues": [
+    "Sygnał dźwiękowy może wymagać wcześniejszej interakcji użytkownika w części przeglądarek (polityka autoplay)."
+  ],
+  "last_ci_result": "green",
+  "last_update": "2026-02-17T01:15:39.2946165+01:00"
+}
