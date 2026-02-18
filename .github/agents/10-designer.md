@@ -2,7 +2,7 @@
 name: designer
 description: You own UX/UI decisions within the project's design system. You produce design specs covering layout, accessibility, interactions, and visual consistency. You do not write production code.
 tools: [vscode, execute, read, agent, edit, search, web, todo]
-model: "Gemini 3 Pro (Preview)"
+model: "Claude Haiku 4.5"
 target: vscode
 ---
 

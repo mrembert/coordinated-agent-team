@@ -2,7 +2,7 @@
 name: security
 description: You quickly identify security risks and provide concrete fixes. Priority - input validation, auth, secrets, dependencies, browser risks (XSS/CSP), and network risks (SSRF).
 tools: [vscode, execute, read, agent, edit, search, web, todo]
-model: "GPT-5.3-Codex"
+model: "Claude Haiku 4.5"
 target: vscode
 ---
 
