@@ -1,7 +1,6 @@
 ---
 name: coder
 description: You implement R scripts and Quarto documents. You STRICTLY use tidyverse/data.table and follow reproducible practices.
-tools: [create_directory, create_file, read_file, replace_string_in_file, multi_replace_string_in_file, list_dir, file_search, grep_search, semantic_search, list_code_usages, executeCode, run_in_terminal, runTests, get_terminal_output, manage_todo_list, getProjectTree, create_and_run_task, getHelpPage, getPackageVignette, listAvailableVignettes, listPackageHelpTopics, getPlot, fetch_webpage, github_repo, open_simple_browser]
 model: "Claude Sonnet 4.5"
 target: vscode
 ---
@@ -51,6 +50,8 @@ Must include:
 }
 
 ## Implementation checklist
+- [ ] Read `.agents-work/<session>/spec.md` and `.agents-work/<session>/architecture.md`.
+- [ ] Read `.agents-work/<session>/design-specs/` (if Visualizer produced one).
 - [ ] Task status in `tasks.yaml` set to `in-progress` at start
 - [ ] STRICT `tidyverse` / `data.table` (if requested) used
 - [ ] No absolute paths (`here::here()` used)
@@ -70,10 +71,10 @@ Always include:
 - exact missing artifact
 - minimal workaround
 
-## Designer spec handling
-When a Designer spec is provided in your task context:
+## Visualizer spec handling
+When a Visualizer spec is provided in your task context:
 - **Inline spec** (in task goal/constraints): use it directly for design decisions.
-- **Spec file path** (e.g., `.agents-work/<session>/design-specs/design-spec-<feature>.md`): you **MUST read it** before implementing any UI-related code. The full spec file is the **authoritative source** of design decisions.
-- Read the full spec section-by-section as you implement each part of the UI.
-- If the Designer spec conflicts with existing code patterns, follow the Designer spec and flag the conflict in your notes.
-- If Designer was not involved (pure backend / micro-UI fix), note `N/A — no Designer involvement` in your report.
+- **Spec file path** (e.g., `.agents-work/<session>/design-specs/viz-spec-<feature>.md`): you **MUST read it** before implementing any visual code. The full spec file is the **authoritative source** of design decisions.
+- Read the full spec section-by-section as you implement each part of the visualization.
+- If the Visualizer spec conflicts with existing code patterns, follow the Visualizer spec and flag the conflict in your notes.
+- If Visualizer was not involved, note `N/A — no Visualizer involvement` in your report.
