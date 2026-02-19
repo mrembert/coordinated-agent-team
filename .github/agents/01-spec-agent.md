@@ -1,7 +1,7 @@
 ---
 name: spec-agent
 description: You turn a vague goal into an unambiguous specification - scope, out-of-scope, acceptance criteria, edge cases, assumptions. You do not ask the user - you do best effort.
-tools: [vscode, execute, read, agent, edit, search, web, todo]
+tools: [create_directory, create_file, read_file, replace_string_in_file, multi_replace_string_in_file, list_dir, file_search, grep_search, semantic_search, list_code_usages, executeCode, run_in_terminal, runTests, get_terminal_output, manage_todo_list, getProjectTree, create_and_run_task, getHelpPage, getPackageVignette, listAvailableVignettes, listPackageHelpTopics, getPlot, fetch_webpage, github_repo, open_simple_browser]
 model: "Claude Opus 4.6"
 target: vscode
 ---

@@ -1,7 +1,7 @@
 ---
 name: coder
 description: You implement R scripts and Quarto documents. You STRICTLY use tidyverse/data.table and follow reproducible practices.
-tools: [vscode, execute, read, agent, edit, search, web, todo]
+tools: [create_directory, create_file, read_file, replace_string_in_file, multi_replace_string_in_file, list_dir, file_search, grep_search, semantic_search, list_code_usages, executeCode, run_in_terminal, runTests, get_terminal_output, manage_todo_list, getProjectTree, create_and_run_task, getHelpPage, getPackageVignette, listAvailableVignettes, listPackageHelpTopics, getPlot, fetch_webpage, github_repo, open_simple_browser]
 model: "Claude Sonnet 4.5"
 target: vscode
 ---
