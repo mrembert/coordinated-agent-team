@@ -216,6 +216,6 @@ If a subagent dispatch fails after retries, the Orchestrator MUST enter BLOCKED 
 
 ## Canonical agent names
 Use these exact names in `dispatch.agent`, `recommended_agent`, and `runSubagent` calls:
-`SpecAgent` | `Architect` | `Planner` | `Designer` | `Researcher` | `Coder` | `Reviewer` | `QA` | `Security` | `Integrator` | `Docs` | `Orchestrator`
+`SpecAgent` | `Architect` | `Planner` | `DataExplorer` | `Designer` | `Researcher` | `Coder` | `Reviewer` | `QA` | `Security` | `Integrator` | `Docs` | `Orchestrator`
 
-Frontmatter `name` fields use kebab-case (`spec-agent`, `architect`, etc.) for system identification. Dispatch and inter-agent references MUST use PascalCase names from the list above.
+Frontmatter `name` fields use kebab-case (`spec-agent`, `architect`, `data-explorer`, etc.) for system identification. Dispatch and inter-agent references MUST use PascalCase names from the list above.

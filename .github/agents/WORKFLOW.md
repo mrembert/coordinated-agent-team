@@ -28,9 +28,9 @@ Note: Orchestrator does not create files directly - it delegates via dispatch. E
 Gate: artifacts exist. If Coder discovers complexity, exit lean mode and restart from full INTAKE.
 
 ### DESIGN
-Agents: Researcher (if research needed - see Orchestrator's Researcher trigger policy), then Architect, then Designer (if task involves UI/UX)
-Produces: `.agents-work/<session>/research/` (if Researcher involved), `.agents-work/<session>/architecture.md`, `.agents-work/<session>/adr/ADR-001.md` (if needed), `.agents-work/<session>/design-specs/` (if Designer involved)
-Gate: architecture consistent with spec, risks recorded. If research was requested, research report exists. If UI involved, design spec exists.
+Agents: Researcher (if research needed - see Orchestrator's Researcher trigger policy), then Architect, then DataExplorer (if task involves data - see Orchestrator's DataExplorer trigger policy), then Designer (if task involves UI/UX)
+Produces: `.agents-work/<session>/research/` (if Researcher involved), `.agents-work/<session>/architecture.md`, `.agents-work/<session>/adr/ADR-001.md` (if needed), `.agents-work/<session>/data-exploration/` (if DataExplorer involved), `.agents-work/<session>/design-specs/` (if Designer involved)
+Gate: architecture consistent with spec, risks recorded. If research was requested, research report exists. If data exploration was requested, EDA report exists. If UI involved, design spec exists.
 
 ### PLAN
 Agent: Planner
@@ -113,6 +113,7 @@ Retry counts are tracked in `.agents-work/<session>/status.json` under `retry_co
 Orchestrator MUST use all core agents at least once in a full run:
 - SpecAgent, Architect, Planner, Coder, Reviewer, QA, Security, Integrator, Docs
 Optional (used when applicable):
+- DataExplorer (when task involves new data sources or existing project data integration)
 - Researcher (when task requires technology evaluation, codebase analysis, or best practices research)
 - Designer (when task involves UI/UX)
 - ASK_USER (when human judgment is needed)

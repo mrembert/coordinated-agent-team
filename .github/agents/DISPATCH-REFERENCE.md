@@ -50,15 +50,18 @@ If any item fails, fix the prompt before dispatching. Never send an incomplete d
 |-------|----------------------|
 | **SpecAgent** | (none — creates initial artifacts) |
 | **Architect** | `spec.md`, `acceptance.json`, research report (if Researcher was involved) |
+| **DataExplorer** | `spec.md`, `architecture.md` (if exists), existing project scripts (if integration task) |
 | **Designer** | `spec.md`, `architecture.md`, `acceptance.json` |
 | **Researcher** | `spec.md`, `acceptance.json` (if available), `architecture.md` (if available) |
-| **Planner** | `spec.md`, `acceptance.json`, `architecture.md`, design-spec (if Designer involved), research report (if Researcher involved) |
-| **Coder** | `spec.md`, `tasks.yaml`, `architecture.md` (if exists), design-spec (**MANDATORY if Designer produced one**) |
-| **Reviewer** | `spec.md`, `tasks.yaml`, `architecture.md` (if exists), design-spec (if applicable). Additionally: `session_changed_files` in task object (see full-scope rule below — NOT in `context_files`) |
-| **QA** | `spec.md`, `acceptance.json`, `tasks.yaml` |
+| **Planner** | `spec.md`, `acceptance.json`, `architecture.md`, data exploration report (if DataExplorer involved), design-spec (if Designer involved), research report (if Researcher involved) |
+| **Coder** | `spec.md`, `tasks.yaml`, `architecture.md` (if exists), data exploration report (**if DataExplorer involved**), design-spec (**MANDATORY if Designer produced one**) |
+| **Reviewer** | `spec.md`, `tasks.yaml`, `architecture.md` (if exists), data exploration report (if applicable), design-spec (if applicable). Additionally: `session_changed_files` in task object (see full-scope rule below — NOT in `context_files`) |
+| **QA** | `spec.md`, `acceptance.json`, `tasks.yaml`, data exploration report (if applicable) |
 | **Security** | `tasks.yaml`, `architecture.md` (if exists) |
 | **Integrator** | `tasks.yaml`, `acceptance.json` |
 | **Docs** | `spec.md`, `tasks.yaml`, `acceptance.json`, `architecture.md` (if exists) |
+
+**DataExplorer report enforcement**: If DataExplorer created EDA reports in `.agents-work/<session>/data-exploration/`, these MUST be included in `context_files` for **Planner**, **Coder**, **Reviewer**, and **QA**. Data understanding is critical for correct implementation.
 
 **Designer spec enforcement**: If Designer was involved for a task, the design-spec path MUST be included in `context_files` for **Coder**, **Reviewer**, and **QA**. Omitting it is a workflow violation.
 
@@ -153,4 +156,3 @@ If `runSubagent` fails (error, timeout, invalid/unparseable response):
 ## 7. Canonical agent names
 Use these exact names in dispatches:
 `SpecAgent` | `Architect` | `Planner` | `Designer` | `Researcher` | `Coder` | `Reviewer` | `QA` | `Security` | `Integrator` | `Docs` | `Orchestrator`
-
